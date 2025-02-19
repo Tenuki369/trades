@@ -1,0 +1,30 @@
+// Backend: Node.js Express API for Order Execution
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const app = express();
+
+app.use(bodyParser.json());
+app.use(cors());
+
+// Simulated order book
+let orderBook = { buy: [], sell: [] };
+
+// Place an order
+app.post('/order', (req, res) => {
+    const { type, price, quantity } = req.body;
+    if (!type || !price || !quantity) {
+        return res.status(400).json({ error: 'Invalid order data' });
+    }
+    orderBook[type].push({ price, quantity });
+    res.json({ message: 'Order placed successfully', order: { type, price, quantity } });
+});
+
+// Get current order book
+app.get('/orderbook', (req, res) => {
+    res.json(orderBook);
+});
+
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
