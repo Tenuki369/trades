@@ -1,0 +1,34 @@
+// Frontend: React Component for Order Book Display
+import React, { useState, useEffect } from 'react';
+
+export default function OrderBook() {
+    const [orderBook, setOrderBook] = useState({ buy: [], sell: [] });
+
+    useEffect(() => {
+        fetch('http://localhost:5000/orderbook')
+            .then(response => response.json())
+            .then(data => setOrderBook(data));
+    }, []);
+
+    return (
+        <div>
+            <h2>Order Book</h2>
+            <div>
+                <h3>Buy Orders</h3>
+                <ul>
+                    {orderBook.buy.map((order, index) => (
+                        <li key={index}>{order.quantity} @ ${order.price}</li>
+                    ))}
+                </ul>
+            </div>
+            <div>
+                <h3>Sell Orders</h3>
+                <ul>
+                    {orderBook.sell.map((order, index) => (
+                        <li key={index}>{order.quantity} @ ${order.price}</li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+}
